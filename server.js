@@ -13,10 +13,11 @@ const PORT  = process.env.PORT || 3001;
 //Middleware
 app.use(express.static('public'));
 
+// Sets up the Express app to handle data parsing
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//GET
+//GET requests
 app.get('/api/notes', (req, res) => {
   res.json(notes.slice(1));
 });
@@ -33,22 +34,23 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
-function createNote(body, noteArr) {
+function createNote(body, newArr) {
   const newNote = body;
-  if (!Array.isArray(noteArr))
-      noteArr = [];  
-  if (noteArr.length === 0)
-      noteArr.push(0);
-  body.id = noteArr[0];
-  noteArr[0]++;
-  noteArr.push(newNote);
+  if (!Array.isArray(newArr))
+      newArr = [];  
+  if (newArr.length === 0)
+      newArr.push(0);
+  body.id = newArr[0];
+  newArr[0]++;
+  newArr.push(newNote);
   fs.writeFileSync(
       path.join(__dirname, './db/db.json'),
-      JSON.stringify(noteArr, null, 2)
+      JSON.stringify(newArr, null, 2)
   );
   return newNote;
 }
 
+//Post new notes
 app.post('/api/notes', (req, res) => {
   const newNote = createNote(req.body, notes);
   res.json(newNote);
