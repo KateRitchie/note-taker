@@ -2,7 +2,7 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const database = require('./Develop/db/db.json');
+const notes = require('./db/db.json');
 
 //Initialize app
 const app = express();
@@ -16,40 +16,48 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) =>
-  res.sendFile(path.join(__dirname, '/public/index.html'))
-);
-
-// GET request for notes.html
-app.get('/notes', (req, res) => {
-  res.sendFile(path.join(__dirname, '/public/index.html'))
+//GET
+app.get('/api/notes', (req, res) => {
+  res.json(notes.slice(1));
 });
 
-//GET request for index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
+});
+
+app.get('/notes', (req, res) => {
+  res.sendFile(path.join(__dirname, './public/notes.html'));
+});
+
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
-// POST request to add a review
-app.post('/api/reviews', (req, res) => {
-  // Log that a POST request was received
-  console.info(`${req.method} request received to add a review`);
+function createNote(body, noteArr) {
+  const newNote = body;
+  if (!Array.isArray(noteArr))
+      noteArr = [];  
+  if (noteArr.length === 0)
+      noteArr.push(0);
+  body.id = noteArr[0];
+  noteArr[0]++;
+  noteArr.push(newNote);
+  fs.writeFileSync(
+      path.join(__dirname, './db/db.json'),
+      JSON.stringify(noteArr, null, 2)
+  );
+  return newNote;
+}
 
-  // Destructuring assignment for the items in req.body
-  const { product, review, username } = req.body;
+app.post('/api/notes', (req, res) => {
+  const newNote = createNote(req.body, notes);
+  res.json(newNote);
+  console.log(newNote)
+});
 
-  // If all the required properties are present
-  if (product && review && username) {
-    // Variable for the object we will save
-    const newReview = {
-      product,
-      review,
-      username,
-      upvotes: Math.floor(Math.random() * 100),
-      review_id: uuid(),
-    };
 
-    // Convert the data to a string so we can save it - remember this is asycronous
+
+  /*  // Convert the data to a string so we can save it - remember this is asycronous
     //const reviewString = JSON.stringify(newReview);
        let newArr = []
     fs.readFile(`./db/reviews.json`, function (err, data) {
@@ -65,19 +73,9 @@ app.post('/api/reviews', (req, res) => {
             `Review for ${newReview.product} has been written to JSON file`
           )
     );
-  });
+  });*/
 
-    const response = {
-      status: 'success',
-      body: newReview,
-    };
 
-    console.log(response);
-    res.status(201).json(response);
-  } else {
-    res.status(500).json('Error in posting review');
-  }
-});
 
 //Listener
 app.listen(PORT, () =>
