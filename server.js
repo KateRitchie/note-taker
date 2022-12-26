@@ -58,27 +58,6 @@ app.post('/api/notes', (req, res) => {
 });
 
 
-
-  /*  // Convert the data to a string so we can save it - remember this is asycronous
-    //const reviewString = JSON.stringify(newReview);
-       let newArr = []
-    fs.readFile(`./db/reviews.json`, function (err, data) {
-      newArr = JSON.parse(data);
-      newArr.push(newReview);
-      console.error(newArr)    
-
-    // Write the string to a file
-    fs.writeFile(`./db/reviews.json`, JSON.stringify(newArr), (err) =>
-      err
-        ? console.error(err)
-        : console.log(
-            `Review for ${newReview.product} has been written to JSON file`
-          )
-    );
-  });*/
-
-
-
 //Listener
 app.listen(PORT, () =>
   console.log(`Listening on port http://localhost:${PORT}`)
