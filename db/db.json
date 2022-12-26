@@ -6,30 +6,5 @@
       "title": "Test Title",
       "text": "Test text"
     }
-  },
-  {
-    "title": "Bootcamp",
-    "text": "Install MySQL",
-    "id": 4
-  },
-  {
-    "title": "Bank",
-    "text": "Balance bank book ",
-    "id": 5
-  },
-  {
-    "title": "Chores",
-    "text": "Need to finish all chores by 2 pm",
-    "id": 6
-  },
-  {
-    "title": "Test",
-    "text": "test",
-    "id": 7
-  },
-  {
-    "title": "test",
-    "text": "test",
-    "id": 8
   }
 ]
